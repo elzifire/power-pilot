@@ -6,6 +6,7 @@ import 'package:museum_polri/muri_app/view/home.dart';
 import 'package:museum_polri/muri_app/view/leaderboard.dart';
 import 'package:museum_polri/muri_app/view/onboard.dart';
 import 'package:museum_polri/muri_app/view/profile.dart';
+import 'package:museum_polri/muri_app/view/quiz.dart';
 import 'package:museum_polri/muri_app/view/quiz_category.dart';
 import 'package:museum_polri/muri_app/view/register.dart';
 import 'package:museum_polri/muri_app/view/scan.dart';
@@ -148,6 +149,16 @@ class AppRouter {
             return MaterialPage(
               key: state.pageKey,
               child: const CariBarangCategoryScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/quiz',
+          parentNavigatorKey: _rootNavigatorKey,
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: const QuizScreen(),
             );
           },
         ),

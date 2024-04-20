@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:museum_polri/muri_app/view/component/category_card.dart';
 
 List<Map<String, String>> categories = [
@@ -132,7 +133,9 @@ class QuizCategoryScreen extends StatelessWidget {
                                       return _bottomSheet(
                                           context: context,
                                           categories: categories[0],
-                                          onStart: () {});
+                                          onStart: () {
+                                            context.push('/quiz');
+                                          });
                                     });
                               }),
                           CategoryCard(
