@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -173,10 +174,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  // Process data
-                                }
+                                // if (_formKey.currentState!.validate()) {
+                                //   _formKey.currentState!.save();
+                                //   // Process data
+                                // }
+                                context.go('/');
                               },
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,

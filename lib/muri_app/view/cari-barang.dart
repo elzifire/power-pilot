@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class QuizScreen extends StatefulWidget {
-  const QuizScreen({Key? key}) : super(key: key);
+class CariBarangScreen extends StatefulWidget {
+  const CariBarangScreen({Key? key}) : super(key: key);
 
   @override
-  State<QuizScreen> createState() => _QuizScreenState();
+  State<CariBarangScreen> createState() => _CariBarangScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen> {
+class _CariBarangScreenState extends State<CariBarangScreen> {
   List<Map<String, Object>> questions = [
     {
       'questionText': 'Question 1',
@@ -54,6 +55,15 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  void _onQRViewCreated(QRViewController controller) {
+    controller.scannedDataStream.listen((scanData) {
+      controller.pauseCamera();
+      Navigator.pop(context, scanData.code);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,8 +74,8 @@ class _QuizScreenState extends State<QuizScreen> {
             begin: Alignment.topCenter,
             end: Alignment.center,
             colors: [
-              Color(0xFFC7C4C1),
-              Color(0xFF8A837E),
+              Color(0xFF9DE6E9),
+              Color(0xFF32CBD1),
             ],
           ),
         ),
@@ -73,12 +83,15 @@ class _QuizScreenState extends State<QuizScreen> {
           child: Stack(
             children: [
               Align(
-                alignment: Alignment.center,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Pertanyaan',
@@ -86,7 +99,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                 fontSize: 20, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            '5 dari 10',
+                            '1 dari 5',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w600),
                           )
@@ -96,102 +109,90 @@ class _QuizScreenState extends State<QuizScreen> {
                         height: 20,
                       ),
                       Container(
+                        width: double.infinity,
+                        height: 300,
                         decoration: BoxDecoration(
-                          color: Color(0xFF3E3D3E),
+                          image: DecorationImage(
+                            image: AssetImage('images/question-mark.png'),
+                            fit: BoxFit.cover,
+                          ),
                           border: Border.all(
-                            color: Color(0xFF878584),
-                            width: 2,
+                            color: Color(0xFF1CC8CE),
+                            width: 4,
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 200,
-                                height: 150,
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://upload.wikimedia.org/wikipedia/commons/f/f8/AK-47.png',
-                                  fit: BoxFit.contain,
-                                  placeholder: (context, url) => const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 40),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF4B4B4B).withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  "Apa nama senjata berikut?",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 40),
+                            decoration: BoxDecoration(
+                              color: Color(0xFF4B4B4B).withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              "Aku merupakan , alat yang bisa menyedot data dari ponsel, meski data itu sudah terhapus sebelumnya. Seampuh apa kemampuan alat ini menyingkap data dalam ponsel",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(
                         height: 30,
                       ),
-                      ListView(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {},
-                            child: AnswerOption(
-                              text: "AK47",
-                              isCorrect: true,
+                      Center(
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Color(
+                                    0xFF09A2A8), // Ganti dengan warna background yang Anda inginkan
+                                borderRadius: BorderRadius.circular(
+                                    50), // Ganti dengan radius border yang Anda inginkan
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  String barcodeScanRes = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QRView(
+                                        key: qrKey,
+                                        onQRViewCreated: _onQRViewCreated,
+                                        overlay: QrScannerOverlayShape(
+                                          borderColor: Colors.orange,
+                                          borderRadius: 10,
+                                          borderLength: 30,
+                                          borderWidth: 10,
+                                          cutOutSize: 300,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                  print(barcodeScanRes);
+                                },
+                                icon: Icon(
+                                  Icons.qr_code_scanner,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: AnswerOption(
-                              text: "Glock47",
-                              isCorrect: false,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: AnswerOption(
-                              text: "JKT47",
-                              isCorrect: false,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: AnswerOption(
-                              text: "VR46",
-                              isCorrect: false,
-                            ),
-                          ),
-                        ].map((Widget widget) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5.0), // Atur jarak sesuai kebutuhan
-                            child: widget,
-                          );
-                        }).toList(),
+                            Text(
+                              "Scan",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 30,
@@ -203,7 +204,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             onPressed: () {},
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF757472)),
+                                  Color(0xFF21777A)),
                               foregroundColor: MaterialStateProperty.all<Color>(
                                   Color(0xFFFFFFFF)),
                               shape: MaterialStateProperty.all<
@@ -229,7 +230,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(
-                        0xFFA9A4A2), // Ganti dengan warna background yang Anda inginkan
+                        0xFF21777A), // Ganti dengan warna background yang Anda inginkan
                     borderRadius: BorderRadius.circular(
                         15), // Ganti dengan radius border yang Anda inginkan
                   ),
@@ -239,7 +240,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     },
                     icon: Icon(
                       Icons.close,
-                      color: Color(0xFF504848),
+                      color: Colors.white,
                       size: 25,
                     ),
                   ),
